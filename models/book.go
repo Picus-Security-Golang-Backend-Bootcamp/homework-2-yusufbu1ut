@@ -54,15 +54,13 @@ func (book *Book) Init(newName string, writer Author) {
 }
 
 type deletable interface {
-	delete(item int) Book
+	delete() Book
 }
 
 //delete func for Book returns changed book
-func (book *Book) delete(item int) Book {
-	if book.Id == item && !book.isDeleted {
+func (book *Book) delete() Book {
+	if !book.IsDeleted {
 		book.IsDeleted = true
-		//fmt.Println(book)
-		//fmt.Println(book.IsDeleted)
 	} else {
 		fmt.Println("The book is already deleted.")
 		os.Exit(3)
@@ -71,8 +69,8 @@ func (book *Book) delete(item int) Book {
 }
 
 //this func for deletable interface to call delete func generator
-func DeleteInterface(d deletable, item int) {
-	d.delete(item)
+func DeleteInterface(d deletable) {
+	d.delete()
 }
 
 //Buy func comes buyying count and process on stock number returns changed book infos

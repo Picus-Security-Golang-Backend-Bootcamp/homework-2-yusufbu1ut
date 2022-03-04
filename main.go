@@ -83,7 +83,7 @@ func main() {
 			}
 			for i, book := range slcBook {
 				if book.Id == intId {
-					slcBook[i] = book.Buy(intCnt)
+					slcBook[i] = book.Buy(intCnt) //mark
 					break
 				}
 				if i == len(slcBook)-1 && book.Id != intId {
@@ -116,8 +116,8 @@ func main() {
 			}
 			for i, b := range slcBook {
 				if b.Id == intId {
-					models.DeleteInterface(&b, intId)
-					slcBook[i] = b
+					models.DeleteInterface(&b)
+					slcBook[i] = b //mark
 					break
 				}
 				if i == len(slcBook)-1 && b.Id != intId {
