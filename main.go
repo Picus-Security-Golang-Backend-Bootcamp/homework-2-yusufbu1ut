@@ -14,44 +14,31 @@ var slcBook []models.Book
 
 func init() {
 	//Adding book informations to slice
-	a1 := new(models.Author)
-	a1.Init("George", "Orwell")
-	b1 := new(models.Book)
-	b1.Init("1984", *a1)
+	a1 := models.NewAuthor("George", "Orwell")
+	b1 := models.NewBook("1984", *a1)
 	slcBook = append(slcBook, *b1)
 
-	a2 := new(models.Author)
-	a2.Init("Alfredo", "Covelli")
-	b2 := new(models.Book)
-	b2.Init("Vahana Masterclass", *a2)
+	a2 := models.NewAuthor("Alfredo", "Covelli")
+	b2 := models.NewBook("Vahana Masterclass", *a2)
 	slcBook = append(slcBook, *b2)
 
-	a3 := new(models.Author)
-	a3.Init("Hunter", "Biden")
-	b3 := new(models.Book)
-	b3.Init("Beautiful Things’ A Memoir", *a3)
+	a3 := models.NewAuthor("Hunter", "Biden")
+	b3 := models.NewBook("Beautiful Things’ A Memoir", *a3)
 	slcBook = append(slcBook, *b3)
 
-	a4 := new(models.Author)
-	a4.Init("Dalai", "Lama")
-	b4 := new(models.Book)
-	b4.Init("The Little Book of Encouragement", *a4)
+	a4 := models.NewAuthor("Dalai", "Lama")
+	b4 := models.NewBook("The Little Book of Encouragement", *a4)
 	slcBook = append(slcBook, *b4)
 
-	a5 := new(models.Author)
-	a5.Init("Ramachandra", "Guha")
-	b5 := new(models.Book)
-	b5.Init("The Commonwealth of Cricket", *a5)
+	a5 := models.NewAuthor("Ramachandra", "Guha")
+	b5 := models.NewBook("The Commonwealth of Cricket", *a5)
 	slcBook = append(slcBook, *b5)
 
-	b6 := new(models.Book)
-	b6.Init("Diaries", *a1)
+	b6 := models.NewBook("Diaries", *a1)
 	slcBook = append(slcBook, *b6)
 
-	a6 := new(models.Author)
-	a6.Init("Platon", "")
-	b7 := new(models.Book)
-	b7.Init("Parmenides", *a6)
+	a6 := models.NewAuthor("Platon", "")
+	b7 := models.NewBook("Parmenides", *a6)
 	slcBook = append(slcBook, *b7)
 }
 
@@ -82,11 +69,11 @@ func main() {
 				os.Exit(2)
 			}
 			for i, book := range slcBook {
-				if book.Id == intId {
-					slcBook[i] = book.Buy(intCnt) //mark
+				if book.Id == intId && !slcBook[i].IsDeleted {
+					slcBook[i].Buy(intCnt)
 					break
 				}
-				if i == len(slcBook)-1 && book.Id != intId {
+				if (i == len(slcBook)-1 && book.Id != intId) || slcBook[i].IsDeleted {
 					fmt.Println("Expected valid buy argument(id) for command 'buy', Entered value not in Books")
 					os.Exit(2)
 				}
@@ -105,7 +92,7 @@ func main() {
 			fmt.Println("Expected search argument for command 'search'")
 			os.Exit(1)
 		}
-	//Delete arg changes str to int after the process calls with Deletable DeleteInterface func for book
+	//Delete arg changes str to int after the process calls with Delete func for book
 	case "delete":
 		if len(os.Args) == 3 {
 			byId := os.Args[2]
@@ -116,8 +103,7 @@ func main() {
 			}
 			for i, b := range slcBook {
 				if b.Id == intId {
-					models.DeleteInterface(&b)
-					slcBook[i] = b //mark
+					slcBook[i].Delete()
 					break
 				}
 				if i == len(slcBook)-1 && b.Id != intId {

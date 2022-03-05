@@ -7,29 +7,32 @@ import (
 	"time"
 )
 
-var id int = 1                //for id increase +1 when added new item Book
+var id int = 0                //for id increase +1 when added new item Book
 var stock_code int = 10000000 //for stock_code increase +1 when added new item Book
 //Book contains Author infos
 type Book struct {
+	IsDeleted                             bool
 	Id, StockCode, ISBN, StockNo, PagesNo int
 	Price                                 float64
 	Name                                  string
-	IsDeleted                             bool
 	Author
 }
 
 //Author
 type Author struct {
+	isDeleted bool
 	//id            int
 	name, surname string
-	isDeleted     bool
 }
 
 //constructor for Author
-func (auth *Author) Init(name string, surname string) {
-	auth.name = name
-	auth.surname = surname
-	auth.isDeleted = false
+func NewAuthor(name string, surname string) *Author {
+
+	return &Author{
+		name:      name,
+		surname:   surname,
+		isDeleted: false,
+	}
 }
 
 //Author print func brings together author infos
@@ -38,50 +41,46 @@ func (auth *Author) Print() string {
 }
 
 //constructor for Book
-func (book *Book) Init(newName string, writer Author) {
-	book.Name = newName
-	book.PagesNo = randomInt(50, 500) //random
-	book.Price = randFloat(15, 250)   //random
-	book.StockNo = randomInt(15, 20)  //random
-	book.Author = writer
-	book.ISBN = randomInt(1000000000, 9999999999) //random
-	book.Id = id
-	book.StockCode = stock_code
-	book.IsDeleted = false
+func NewBook(newName string, writer Author) *Book {
 
 	id += 1
 	stock_code += 1
+
+	return &Book{
+		Name:      newName,
+		PagesNo:   randomInt(50, 500), //random
+		Price:     randFloat(15, 250), //random
+		StockNo:   randomInt(15, 20),  //random
+		Author:    writer,
+		ISBN:      randomInt(1000000000, 9999999999), //random
+		Id:        id,
+		StockCode: stock_code,
+		IsDeleted: false,
+	}
 }
 
-type deletable interface {
-	delete() Book
+type Deletable interface {
+	Delete()
 }
 
 //delete func for Book returns changed book
-func (book *Book) delete() Book {
+func (book *Book) Delete() {
 	if !book.IsDeleted {
 		book.IsDeleted = true
 	} else {
 		fmt.Println("The book is already deleted.")
 		os.Exit(3)
 	}
-	return *book
-}
-
-//this func for deletable interface to call delete func generator
-func DeleteInterface(d deletable) {
-	d.delete()
 }
 
 //Buy func comes buyying count and process on stock number returns changed book infos
-func (book *Book) Buy(count int) Book {
+func (book *Book) Buy(count int) {
 	if book.StockNo < count {
 		fmt.Println("Given count is higher than stock number")
 		os.Exit(3)
 	} else {
-		book.StockNo -= count
+		book.StockNo = book.StockNo - count
 	}
-	return *book
 }
 
 //Ramdom int generates for Pages, ISBN, Stock number
