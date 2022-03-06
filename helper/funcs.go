@@ -18,11 +18,11 @@ func Search(input string, slice []models.Book) {
 	fmt.Printf("Results for count '%v' \n", input)
 	fmt.Println("-----------------------------------")
 	for _, b := range slice {
-		if strings.Contains(strings.ToLower(b.Name), strings.ToLower(input)) {
+		if strings.Contains(strings.ToLower(b.Name), strings.ToLower(input)) && !b.IsDeleted {
 			fmt.Println(b.Id, " ", b.StockCode, " ", b.Name, " ", b.Author.Print(), " ", b.StockNo)
-		} else if strings.Contains(strings.ToLower(b.Author.Print()), strings.ToLower(input)) {
+		} else if strings.Contains(strings.ToLower(b.Author.Print()), strings.ToLower(input)) && !b.IsDeleted {
 			fmt.Println(b.Id, " ", b.StockCode, " ", b.Name, " ", b.Author.Print(), " ", b.StockNo)
-		} else if inp == b.StockCode || inp == b.StockNo {
+		} else if (inp == b.StockCode || inp == b.StockNo) && !b.IsDeleted {
 			fmt.Println(b.Id, " ", b.StockCode, " ", b.Name, " ", b.Author.Print(), " ", b.StockNo)
 		}
 	}
@@ -30,6 +30,8 @@ func Search(input string, slice []models.Book) {
 
 //List lists Book slice infos I used this to check delete and buy processes
 func List(slice []models.Book) {
+	fmt.Println("Books")
+	fmt.Println("-----------------------------------")
 	for _, b := range slice {
 		if !b.IsDeleted {
 			fmt.Println(b.Id, " ", b.Name, " ", b.Author.Print(), " ", b.StockNo, " ", b.IsDeleted, " ", b.Price, " ", b.ISBN)
