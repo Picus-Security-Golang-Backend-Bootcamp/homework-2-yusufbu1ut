@@ -2,8 +2,6 @@ package models
 
 import (
 	"fmt"
-	"math/rand"
-	"time"
 )
 
 var id int = 0                //for id increase +1 when added new item Book
@@ -47,11 +45,11 @@ func NewBook(newName string, writer Author) *Book {
 
 	return &Book{
 		Name:      newName,
-		PagesNo:   randomInt(50, 500), //random
-		Price:     randFloat(15, 250), //random
-		StockNo:   randomInt(15, 20),  //random
+		PagesNo:   RandomInt(50, 500), //random
+		Price:     RandFloat(15, 250), //random
+		StockNo:   RandomInt(15, 20),  //random
 		Author:    writer,
-		ISBN:      randomInt(1000000000, 9999999999), //random
+		ISBN:      RandomInt(1000000000, 10000000000), //random
 		Id:        id,
 		StockCode: stock_code,
 		IsDeleted: false,
@@ -80,18 +78,4 @@ func (book *Book) Buy(count int) {
 	} else {
 		book.StockNo = book.StockNo - count
 	}
-}
-
-//Ramdom int generates for Pages, ISBN, Stock number
-func randomInt(min, max int) int {
-	rand.Seed(time.Now().UnixNano())
-	rnd := rand.Intn(max-min) + min
-	return rnd
-}
-
-//Random floats genarates for Price
-func randFloat(min, max float64) float64 {
-	rand.Seed(time.Now().UnixNano())
-	res := min + rand.Float64()*(max-min)
-	return res
 }
