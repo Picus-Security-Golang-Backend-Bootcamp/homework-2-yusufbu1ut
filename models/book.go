@@ -3,7 +3,6 @@ package models
 import (
 	"fmt"
 	"math/rand"
-	"os"
 	"time"
 )
 
@@ -68,16 +67,16 @@ func (book *Book) Delete() {
 	if !book.IsDeleted {
 		book.IsDeleted = true
 	} else {
-		fmt.Println("The book is already deleted.")
-		os.Exit(3)
+		fmt.Println(NotInbooks.Error())
 	}
 }
 
 //Buy func comes buyying count and process on stock number returns changed book infos
 func (book *Book) Buy(count int) {
 	if book.StockNo < count {
-		fmt.Println("Given count is higher than stock number")
-		os.Exit(3)
+		fmt.Println(HigherThanStock.Error())
+	} else if book.IsDeleted {
+		fmt.Println(NotInbooks.Error())
 	} else {
 		book.StockNo = book.StockNo - count
 	}
